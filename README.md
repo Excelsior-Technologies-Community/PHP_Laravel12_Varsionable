@@ -1,7 +1,11 @@
 #  PHP_Laravel12_Varsionable
 
-![Laravel](https://img.shields.io/badge/Laravel-12.x-red)
-![PHP](https://img.shields.io/badge/PHP-8%2B-blue)
+<p align="center">
+<a href="#"><img src="https://img.shields.io/badge/Laravel-12-red" alt="Laravel Version"></a>
+<a href="#"><img src="https://img.shields.io/badge/PHP-8.2+-blue" alt="PHP Version"></a>
+<a href="#"><img src="https://img.shields.io/badge/Package-laravel--versionable-green" alt="Versionable Package"></a>
+<a href="#"><img src="https://img.shields.io/badge/Database-MySQL-orange" alt="Database"></a>
+</p>
 
 
 ---
