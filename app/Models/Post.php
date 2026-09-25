@@ -9,8 +9,18 @@ class Post extends Model
 {
     use Versionable;
 
-    protected $fillable = ['title', 'content'];
+    protected $fillable = [
+        'title',
+        'content',
+    ];
 
-    // Only these fields will be versioned
-    protected $versionable = ['title', 'content'];
+    protected $versionable = [
+        'title',
+        'content',
+    ];
+
+    public function restoreHistories()
+    {
+        return $this->hasMany(VersionRestoreHistory::class);
+    }
 }
