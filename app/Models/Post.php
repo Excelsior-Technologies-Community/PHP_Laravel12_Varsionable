@@ -21,6 +21,8 @@ class Post extends Model
 
     public function restoreHistories()
     {
-        return $this->hasMany(VersionRestoreHistory::class);
+        return $this->hasMany(
+            VersionRestoreHistory::class
+        );
     }
 }
