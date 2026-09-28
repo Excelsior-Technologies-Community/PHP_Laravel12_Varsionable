@@ -16,11 +16,58 @@ Route::get('/version-dashboard', [
 
 /*
 |--------------------------------------------------------------------------
-| Post CRUD
+| Post Export
 |--------------------------------------------------------------------------
 */
 
-Route::resource('posts', PostController::class);
+Route::get('/posts-export', [
+    PostController::class,
+    'exportPosts'
+])->name('posts.export');
+
+/*
+|--------------------------------------------------------------------------
+| Bulk Delete
+|--------------------------------------------------------------------------
+*/
+
+Route::delete('/posts-bulk-delete', [
+    PostController::class,
+    'bulkDestroy'
+])->name('posts.bulkDestroy');
+
+/*
+|--------------------------------------------------------------------------
+| Duplicate
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/posts/{post}/duplicate', [
+    PostController::class,
+    'duplicate'
+])->name('posts.duplicate');
+
+/*
+|--------------------------------------------------------------------------
+| Version CSV Export
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/posts/{post}/versions/export', [
+    PostController::class,
+    'exportVersions'
+])->name('posts.versions.export');
+
+/*
+|--------------------------------------------------------------------------
+| Individual Version JSON
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/posts/{post}/versions/{version}/json', [
+    PostController::class,
+    'exportVersionJson'
+])->name('posts.version.json');
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +75,7 @@ Route::resource('posts', PostController::class);
 |--------------------------------------------------------------------------
 */
 
-Route::get('posts/{post}/versions', [
+Route::get('/posts/{post}/versions', [
     PostController::class,
     'showVersions'
 ])->name('posts.versions');
@@ -39,7 +86,15 @@ Route::get('posts/{post}/versions', [
 |--------------------------------------------------------------------------
 */
 
-Route::post('posts/{post}/revert/{version}', [
+Route::post('/posts/{post}/revert/{version}', [
     PostController::class,
     'revert'
 ])->name('posts.revert');
+
+/*
+|--------------------------------------------------------------------------
+| Post CRUD
+|--------------------------------------------------------------------------
+*/
+
+Route::resource('posts', PostController::class);

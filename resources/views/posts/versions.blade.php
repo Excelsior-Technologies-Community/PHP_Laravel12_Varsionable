@@ -23,8 +23,6 @@
             margin: auto;
         }
 
-        /* Header */
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -34,80 +32,66 @@
             background: white;
             padding: 20px 25px;
             border-radius: 10px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
         }
 
         .header h1 {
             margin: 0;
-            font-size: 28px;
         }
 
-        .header p {
-            margin-bottom: 0;
-        }
-
-        .header-actions {
+        .header-actions,
+        .version-actions {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
-
-        /* Buttons */
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             min-height: 40px;
-            padding: 9px 16px;
+            padding: 9px 15px;
             text-decoration: none;
             border-radius: 6px;
             border: none;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            font-family: Arial, sans-serif;
-            white-space: nowrap;
         }
 
         .btn-primary {
             background: #3498db;
-            color: #ffffff;
-        }
-
-        .btn-primary:hover {
-            background: #2980b9;
-        }
-
-        .btn-danger {
-            background: #e74c3c;
-            color: #ffffff;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-
-        .btn-secondary {
-            background: #7f8c8d;
-            color: #ffffff;
-        }
-
-        .btn-secondary:hover {
-            background: #626f70;
+            color: white;
         }
 
         .btn-success {
             background: #2ecc71;
-            color: #ffffff;
+            color: white;
         }
 
-        .btn-success:hover {
-            background: #27ae60;
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
         }
 
-        /* Statistics */
+        .btn-secondary {
+            background: #7f8c8d;
+            color: white;
+        }
+
+        .btn-info {
+            background: #16a085;
+            color: white;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
 
         .stats {
             display: grid;
@@ -120,7 +104,7 @@
             background: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
         }
 
         .stat-card h3 {
@@ -129,69 +113,38 @@
             font-size: 14px;
         }
 
-        .stat-card .number {
+        .number {
             font-size: 28px;
             font-weight: bold;
             margin-top: 10px;
         }
 
-        /* Filter */
-
         .filter-box {
             background: white;
             padding: 20px;
             border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .filter-box h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
         }
 
         .filter-form {
             display: flex;
-            align-items: center;
             gap: 10px;
             flex-wrap: wrap;
         }
 
         .filter-input {
-            padding: 10px 12px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
-        }
-
-        .filter-input:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.15);
         }
 
         .search-input {
             width: 300px;
-            max-width: 100%;
         }
-
-        /* Success */
-
-        .success {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-        }
-
-        /* Timeline */
 
         .timeline {
             position: relative;
-            margin: 30px 0;
             padding-left: 35px;
         }
 
@@ -208,10 +161,10 @@
         .version-card {
             background: white;
             padding: 22px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             border-radius: 12px;
             position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 15px rgba(0,0,0,.08);
         }
 
         .version-card::before {
@@ -224,13 +177,11 @@
             border-radius: 50%;
             background: #3498db;
             border: 3px solid white;
-            box-shadow: 0 0 0 2px #3498db;
         }
 
         .version-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             gap: 15px;
         }
 
@@ -243,8 +194,6 @@
             color: #777;
             font-size: 14px;
         }
-
-        /* Contents */
 
         .contents {
             background: #f8f9fa;
@@ -276,53 +225,30 @@
             font-weight: bold;
         }
 
-        /* Difference */
-
         .diff-box {
             background: #f9fafc;
             padding: 15px;
             border-left: 4px solid #3498db;
             border-radius: 6px;
             margin-top: 15px;
-            margin-bottom: 15px;
         }
-
-        .diff-box h4 {
-            margin-top: 0;
-        }
-
-        /* Badge */
 
         .badge {
-            display: inline-flex;
-            align-items: center;
+            background: #3498db;
+            color: white;
             padding: 5px 9px;
             border-radius: 15px;
             font-size: 12px;
-            background: #3498db;
-            color: white;
-            margin-left: 5px;
         }
-
-        /* Empty */
 
         .empty {
             background: white;
             padding: 40px;
             text-align: center;
             border-radius: 10px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
         }
 
-        /* Restore Form */
-
-        .restore-form {
-            margin-top: 15px;
-        }
-
-        /* Mobile */
-
-        @media (max-width: 800px) {
+        @media(max-width: 800px) {
 
             body {
                 padding: 15px;
@@ -337,34 +263,22 @@
                 align-items: stretch;
             }
 
-            .header-actions {
-                justify-content: center;
-            }
-
             .filter-form {
                 flex-direction: column;
-                align-items: stretch;
             }
 
-            .filter-input {
-                width: 100%;
-            }
-
+            .filter-input,
+            .search-input,
             .filter-form .btn {
                 width: 100%;
             }
 
             .version-header {
                 flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .restore-form .btn {
-                width: 100%;
             }
         }
 
-        @media (max-width: 500px) {
+        @media(max-width: 500px) {
 
             .stats {
                 grid-template-columns: 1fr;
@@ -380,14 +294,12 @@
 
 <div class="container">
 
-    <!-- Header -->
-
     <div class="header">
 
         <div>
 
             <h1>
-                Version History
+                🕒 Version History
             </h1>
 
             <p>
@@ -399,22 +311,30 @@
 
         <div class="header-actions">
 
-            <a href="{{ route('posts.index') }}"
-               class="btn btn-secondary">
+            <a
+                href="{{ route('posts.index') }}"
+                class="btn btn-secondary"
+            >
                 ← Posts
             </a>
 
-            <a href="{{ route('posts.dashboard') }}"
-               class="btn btn-primary">
+            <a
+                href="{{ route('posts.dashboard') }}"
+                class="btn btn-primary"
+            >
                 📊 Dashboard
+            </a>
+
+            <a
+                href="{{ route('posts.versions.export', $post) }}"
+                class="btn btn-success"
+            >
+                📥 Export CSV
             </a>
 
         </div>
 
     </div>
-
-
-    <!-- Success Message -->
 
     @if(session('success'))
 
@@ -424,16 +344,13 @@
 
     @endif
 
-
     <!-- Statistics -->
 
     <div class="stats">
 
         <div class="stat-card">
 
-            <h3>
-                Total Versions
-            </h3>
+            <h3>Total Versions</h3>
 
             <div class="number">
                 {{ $totalVersions }}
@@ -441,58 +358,41 @@
 
         </div>
 
-
         <div class="stat-card">
 
-            <h3>
-                First Version
-            </h3>
+            <h3>First Version</h3>
 
             <div class="number">
 
                 @if($firstVersion)
-
                     #{{ $firstVersion->id }}
-
                 @else
-
                     —
-
                 @endif
 
             </div>
 
         </div>
 
-
         <div class="stat-card">
 
-            <h3>
-                Latest Version
-            </h3>
+            <h3>Latest Version</h3>
 
             <div class="number">
 
                 @if($latestVersion)
-
                     #{{ $latestVersion->id }}
-
                 @else
-
                     —
-
                 @endif
 
             </div>
 
         </div>
 
-
         <div class="stat-card">
 
-            <h3>
-                Current Post
-            </h3>
+            <h3>Current Post</h3>
 
             <div class="number">
                 #{{ $post->id }}
@@ -502,24 +402,25 @@
 
     </div>
 
-
-    <!-- Search & Filter -->
+    <!-- Search -->
 
     <div class="filter-box">
 
         <h3>
-            🔎 Search & Filter Versions
+            🔎 Search & Filter
         </h3>
 
-        <form method="GET"
-              action="{{ route('posts.versions', $post) }}"
-              class="filter-form">
+        <form
+            method="GET"
+            action="{{ route('posts.versions', $post) }}"
+            class="filter-form"
+        >
 
             <input
                 type="text"
                 name="search"
                 value="{{ request('search') }}"
-                placeholder="Search version content..."
+                placeholder="Search version..."
                 class="filter-input search-input"
             >
 
@@ -537,13 +438,17 @@
                 class="filter-input"
             >
 
-            <button type="submit"
-                    class="btn btn-primary">
-                🔎 Apply Filter
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Apply
             </button>
 
-            <a href="{{ route('posts.versions', $post) }}"
-               class="btn btn-secondary">
+            <a
+                href="{{ route('posts.versions', $post) }}"
+                class="btn btn-secondary"
+            >
                 Clear
             </a>
 
@@ -551,15 +456,11 @@
 
     </div>
 
-
-    <!-- Version Timeline -->
-
     <h2>
-        🕒 Version Timeline
+        Version Timeline
     </h2>
 
-
-    @if($versions->count() > 0)
+    @if($versions->count())
 
         <div class="timeline">
 
@@ -569,31 +470,30 @@
 
                     $currentData = is_array($version->contents)
                         ? $version->contents
-                        : json_decode($version->contents, true);
-
-                    /*
-                     * Versions are displayed newest first.
-                     * Therefore the next array item is the older version.
-                     */
+                        : json_decode(
+                            $version->contents,
+                            true
+                        );
 
                     $previousData = null;
 
                     if(isset($versions[$index + 1])) {
 
-                        $prevContents = $versions[$index + 1]->contents;
+                        $prevContents =
+                            $versions[$index + 1]->contents;
 
-                        $previousData = is_array($prevContents)
-                            ? $prevContents
-                            : json_decode($prevContents, true);
-
+                        $previousData =
+                            is_array($prevContents)
+                                ? $prevContents
+                                : json_decode(
+                                    $prevContents,
+                                    true
+                                );
                     }
 
                 @endphp
 
-
                 <div class="version-card">
-
-                    <!-- Version Header -->
 
                     <div class="version-header">
 
@@ -613,14 +513,13 @@
 
                         <div class="date">
 
-                            {{ $version->created_at->format('d M Y, h:i A') }}
+                            {{ $version->created_at->format(
+                                'd M Y, h:i A'
+                            ) }}
 
                         </div>
 
                     </div>
-
-
-                    <!-- Version Content -->
 
                     <div class="contents">
 
@@ -634,7 +533,6 @@
 
                         </div>
 
-
                         <div class="field">
 
                             <div class="field-title">
@@ -646,9 +544,6 @@
                         </div>
 
                     </div>
-
-
-                    <!-- Difference -->
 
                     @if($previousData)
 
@@ -662,20 +557,19 @@
                                 $hasChanges = false;
                             @endphp
 
-
                             @foreach($currentData as $field => $value)
 
                                 @php
-                                    $oldValue = $previousData[$field] ?? null;
+                                    $oldValue =
+                                        $previousData[$field]
+                                        ?? null;
                                 @endphp
-
 
                                 @if($oldValue != $value)
 
                                     @php
                                         $hasChanges = true;
                                     @endphp
-
 
                                     <div class="field">
 
@@ -684,23 +578,19 @@
                                         </div>
 
                                         <div>
-
                                             <span class="old">
                                                 Old:
                                             </span>
 
                                             {{ $oldValue ?? '—' }}
-
                                         </div>
 
                                         <div>
-
                                             <span class="new">
                                                 New:
                                             </span>
 
                                             {{ $value ?? '—' }}
-
                                         </div>
 
                                     </div>
@@ -708,7 +598,6 @@
                                 @endif
 
                             @endforeach
-
 
                             @if(!$hasChanges)
 
@@ -722,27 +611,45 @@
 
                     @endif
 
+                    <div class="version-actions">
 
-                    <!-- Restore -->
+                        <!-- Restore -->
 
-                    <form
-                        method="POST"
-                        action="{{ route('posts.revert', [$post->id, $version->id]) }}"
-                        class="restore-form"
-                        onsubmit="return confirm('Are you sure you want to restore this version?');"
-                    >
+                        <form
+                            method="POST"
+                            action="{{ route(
+                                'posts.revert',
+                                [$post->id, $version->id]
+                            ) }}"
+                        >
 
-                        @csrf
+                            @csrf
 
-                        <button
-                            type="submit"
-                            class="btn btn-danger">
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                                onclick="return confirm(
+                                    'Restore this version?'
+                                )"
+                            >
+                                ↩ Restore
+                            </button>
 
-                            ↩ Restore Version #{{ $version->id }}
+                        </form>
 
-                        </button>
+                        <!-- JSON -->
 
-                    </form>
+                        <a
+                            href="{{ route(
+                                'posts.version.json',
+                                [$post->id, $version->id]
+                            ) }}"
+                            class="btn btn-info"
+                        >
+                            📄 JSON
+                        </a>
+
+                    </div>
 
                 </div>
 
@@ -759,7 +666,7 @@
             </h3>
 
             <p>
-                Try changing your search or date filters.
+                Try changing your filters.
             </p>
 
         </div>
