@@ -639,4 +639,147 @@ class PostController extends Controller
             'mostVersionedPosts'
         ));
     }
+
+    /**
+     * Side-by-Side Visual Diff Inspector & Inline Change Highlighter.
+     */
+    public function compareVersions(Request $request, Post $post)
+    {
+        $versions = $post->versions()->orderBy('created_at', 'desc')->get();
+
+        $v1Id = $request->get('v1');
+        $v2Id = $request->get('v2');
+
+        if (!$v1Id && $versions->count() > 1) {
+            $v1Id = $versions[1]->id;
+        } elseif (!$v1Id && $versions->count() > 0) {
+            $v1Id = $versions[0]->id;
+        }
+
+        if (!$v2Id && $versions->count() > 0) {
+            $v2Id = $versions[0]->id;
+        }
+
+        $v1Data = ['title' => $post->title, 'content' => $post->content, 'created_at' => $post->updated_at, 'label' => 'Current Live Post'];
+        $v2Data = ['title' => $post->title, 'content' => $post->content, 'created_at' => $post->updated_at, 'label' => 'Current Live Post'];
+
+        $v1Model = null;
+        $v2Model = null;
+
+        if ($v1Id && $v1Id !== 'current') {
+            $v1Model = $post->versions()->find($v1Id);
+            if ($v1Model) {
+                $contents = is_array($v1Model->contents) ? $v1Model->contents : json_decode($v1Model->contents, true);
+                $v1Data = [
+                    'title' => $contents['title'] ?? '',
+                    'content' => $contents['content'] ?? '',
+                    'created_at' => $v1Model->created_at,
+                    'label' => $v1Model->label ?: "Version #{$v1Model->id}",
+                ];
+            }
+        }
+
+        if ($v2Id && $v2Id !== 'current') {
+            $v2Model = $post->versions()->find($v2Id);
+            if ($v2Model) {
+                $contents = is_array($v2Model->contents) ? $v2Model->contents : json_decode($v2Model->contents, true);
+                $v2Data = [
+                    'title' => $contents['title'] ?? '',
+                    'content' => $contents['content'] ?? '',
+                    'created_at' => $v2Model->created_at,
+                    'label' => $v2Model->label ?: "Version #{$v2Model->id}",
+                ];
+            }
+        }
+
+        $titleDiff = \App\Services\TextDiffHelper::renderWordDiff($v1Data['title'], $v2Data['title']);
+        $contentDiff = \App\Services\TextDiffHelper::renderWordDiff($v1Data['content'], $v2Data['content']);
+
+        return view('posts.compare', compact(
+            'post',
+            'versions',
+            'v1Id',
+            'v2Id',
+            'v1Data',
+            'v2Data',
+            'v1Model',
+            'v2Model',
+            'titleDiff',
+            'contentDiff'
+        ));
+    }
+
+    /**
+     * Custom Version Milestone Tagging.
+     */
+    public function tagVersion(Request $request, Post $post, $versionId)
+    {
+        $version = $post->versions()->where('id', $versionId)->firstOrFail();
+
+        $validated = $request->validate([
+            'label' => 'nullable|string|max:100',
+        ]);
+
+        $version->label = $validated['label'] ?: null;
+        $version->save();
+
+        return back()->with('success', "Version #{$version->id} label updated to '" . ($version->label ?: 'None') . "'.");
+    }
+
+    /**
+     * Version Lock Toggle.
+     */
+    public function toggleLockVersion(Request $request, Post $post, $versionId)
+    {
+        $version = $post->versions()->where('id', $versionId)->firstOrFail();
+
+        $version->is_locked = !$version->is_locked;
+        $version->save();
+
+        $status = $version->is_locked ? 'Locked 🔒' : 'Unlocked 🔓';
+
+        return back()->with('success', "Version #{$version->id} status changed to {$status}.");
+    }
+
+    /**
+     * Selective Field-Level Restore (Partial Rollback).
+     */
+    public function revertSelective(Request $request, Post $post, $versionId)
+    {
+        $version = $post->versions()->where('id', $versionId)->firstOrFail();
+
+        $validated = $request->validate([
+            'fields' => 'required|array|min:1',
+            'fields.*' => 'in:title,content',
+        ]);
+
+        $contents = is_array($version->contents) ? $version->contents : json_decode($version->contents, true);
+
+        $restoredFields = [];
+
+        if (in_array('title', $validated['fields']) && isset($contents['title'])) {
+            $post->title = $contents['title'];
+            $restoredFields[] = 'Title';
+        }
+
+        if (in_array('content', $validated['fields']) && isset($contents['content'])) {
+            $post->content = $contents['content'];
+            $restoredFields[] = 'Content';
+        }
+
+        $post->save();
+
+        VersionRestoreHistory::create([
+            'post_id' => $post->id,
+            'version_id' => $version->id,
+            'post_title' => $post->title,
+            'restored_at' => now(),
+        ]);
+
+        $fieldList = implode(' & ', $restoredFields);
+
+        return redirect()
+            ->route('posts.versions', $post)
+            ->with('success', "Selective Restore Complete! Successfully restored {$fieldList} from Version #{$version->id}.");
+    }
 }
