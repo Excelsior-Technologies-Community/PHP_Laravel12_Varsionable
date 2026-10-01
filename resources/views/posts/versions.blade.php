@@ -44,24 +44,30 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-height: 40px;
-            padding: 9px 15px;
+            min-height: 38px;
+            padding: 8px 14px;
             text-decoration: none;
             border-radius: 6px;
             border: none;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
         }
 
         .btn-primary {
             background: #3498db;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f39c12;
             color: white;
         }
 
@@ -82,6 +88,11 @@
 
         .btn-info {
             background: #16a085;
+            color: white;
+        }
+
+        .btn-dark {
+            background: #34495e;
             color: white;
         }
 
@@ -236,9 +247,20 @@
         .badge {
             background: #3498db;
             color: white;
-            padding: 5px 9px;
+            padding: 4px 10px;
             border-radius: 15px;
             font-size: 12px;
+            display: inline-block;
+        }
+
+        .badge-tag {
+            background: #8e44ad;
+            color: white;
+        }
+
+        .badge-lock {
+            background: #e67e22;
+            color: white;
         }
 
         .empty {
@@ -248,42 +270,12 @@
             border-radius: 10px;
         }
 
-        @media(max-width: 800px) {
-
-            body {
-                padding: 15px;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .filter-form {
-                flex-direction: column;
-            }
-
-            .filter-input,
-            .search-input,
-            .filter-form .btn {
-                width: 100%;
-            }
-
-            .version-header {
-                flex-direction: column;
-            }
-        }
-
-        @media(max-width: 500px) {
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
+        .selective-box {
+            background: #eef7fc;
+            border: 1px solid #bce8f1;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-top: 15px;
         }
 
     </style>
@@ -302,7 +294,7 @@
                 🕒 Version History
             </h1>
 
-            <p>
+            <p style="margin: 4px 0 0 0;">
                 Post:
                 <strong>{{ $post->title }}</strong>
             </p>
@@ -310,6 +302,13 @@
         </div>
 
         <div class="header-actions">
+
+            <a
+                href="{{ route('posts.versions.compare', $post) }}"
+                class="btn btn-warning"
+            >
+                ⚡ Compare Diff
+            </a>
 
             <a
                 href="{{ route('posts.index') }}"
@@ -349,174 +348,134 @@
     <div class="stats">
 
         <div class="stat-card">
-
             <h3>Total Versions</h3>
-
-            <div class="number">
-                {{ $totalVersions }}
-            </div>
-
+            <div class="number">{{ $totalVersions }}</div>
         </div>
 
         <div class="stat-card">
-
-            <h3>First Version</h3>
-
-            <div class="number">
-
-                @if($firstVersion)
-                    #{{ $firstVersion->id }}
-                @else
-                    —
-                @endif
-
-            </div>
-
-        </div>
-
-        <div class="stat-card">
-
             <h3>Latest Version</h3>
-
-            <div class="number">
-
-                @if($latestVersion)
-                    #{{ $latestVersion->id }}
-                @else
-                    —
-                @endif
-
-            </div>
-
+            <div class="number">#{{ $latestVersion->id ?? '—' }}</div>
         </div>
 
         <div class="stat-card">
+            <h3>First Version</h3>
+            <div class="number">#{{ $firstVersion->id ?? '—' }}</div>
+        </div>
 
-            <h3>Current Post</h3>
-
-            <div class="number">
-                #{{ $post->id }}
-            </div>
-
+        <div class="stat-card">
+            <h3>Milestone Tags</h3>
+            <div class="number">{{ $versions->whereNotNull('label')->count() }}</div>
         </div>
 
     </div>
 
-    <!-- Search -->
+    <!-- Filter -->
 
     <div class="filter-box">
 
-        <h3>
-            🔎 Search & Filter
-        </h3>
-
-        <form
-            method="GET"
-            action="{{ route('posts.versions', $post) }}"
-            class="filter-form"
-        >
+        <form method="GET" class="filter-form">
 
             <input
                 type="text"
                 name="search"
-                value="{{ request('search') }}"
-                placeholder="Search version..."
                 class="filter-input search-input"
+                placeholder="Search version title or content..."
+                value="{{ request('search') }}"
             >
 
             <input
                 type="date"
                 name="from_date"
-                value="{{ request('from_date') }}"
                 class="filter-input"
+                value="{{ request('from_date') }}"
             >
 
             <input
                 type="date"
                 name="to_date"
-                value="{{ request('to_date') }}"
                 class="filter-input"
+                value="{{ request('to_date') }}"
             >
 
-            <button
-                type="submit"
-                class="btn btn-primary"
-            >
-                Apply
+            <button type="submit" class="btn btn-primary">
+                Filter
             </button>
 
             <a
                 href="{{ route('posts.versions', $post) }}"
                 class="btn btn-secondary"
             >
-                Clear
+                Reset
             </a>
 
         </form>
 
     </div>
 
-    <h2>
-        Version Timeline
-    </h2>
+    <!-- Version List -->
 
-    @if($versions->count())
+    @if(count($versions) > 0)
 
         <div class="timeline">
 
             @foreach($versions as $index => $version)
 
                 @php
-
                     $currentData = is_array($version->contents)
                         ? $version->contents
-                        : json_decode(
-                            $version->contents,
-                            true
-                        );
+                        : json_decode($version->contents, true);
+
+                    $previousVersion = $versions[$index + 1] ?? null;
 
                     $previousData = null;
 
-                    if(isset($versions[$index + 1])) {
-
-                        $prevContents =
-                            $versions[$index + 1]->contents;
-
-                        $previousData =
-                            is_array($prevContents)
-                                ? $prevContents
-                                : json_decode(
-                                    $prevContents,
-                                    true
-                                );
+                    if ($previousVersion) {
+                        $previousData = is_array($previousVersion->contents)
+                            ? $previousVersion->contents
+                            : json_decode($previousVersion->contents, true);
                     }
-
                 @endphp
 
                 <div class="version-card">
 
                     <div class="version-header">
 
-                        <div class="version-number">
+                        <div>
+                            <div class="version-number">
+                                Version #{{ $version->id }}
 
-                            Version #{{ $version->id }}
+                                @if($index === 0)
+                                    <span class="badge">Latest</span>
+                                @endif
 
-                            @if($index === 0)
+                                @if($version->label)
+                                    <span class="badge badge-tag">🏷️ {{ $version->label }}</span>
+                                @endif
 
-                                <span class="badge">
-                                    Latest
-                                </span>
+                                @if($version->is_locked)
+                                    <span class="badge badge-lock">🔒 Locked</span>
+                                @endif
+                            </div>
 
-                            @endif
-
+                            <div class="date">
+                                {{ $version->created_at->format('d M Y, h:i A') }}
+                            </div>
                         </div>
 
-                        <div class="date">
+                        <!-- Milestone Tagging & Lock Controls -->
+                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <form method="POST" action="{{ route('posts.version.tag', [$post->id, $version->id]) }}" style="display: flex; gap: 4px;">
+                                @csrf
+                                <input type="text" name="label" placeholder="Custom tag (e.g. v1.0)" value="{{ $version->label }}" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; width: 140px;">
+                                <button type="submit" class="btn btn-dark" style="font-size: 11px; padding: 4px 8px; min-height: 28px;">Tag</button>
+                            </form>
 
-                            {{ $version->created_at->format(
-                                'd M Y, h:i A'
-                            ) }}
-
+                            <form method="POST" action="{{ route('posts.version.lock', [$post->id, $version->id]) }}">
+                                @csrf
+                                <button type="submit" class="btn {{ $version->is_locked ? 'btn-warning' : 'btn-secondary' }}" style="font-size: 11px; padding: 4px 8px; min-height: 28px;">
+                                    {{ $version->is_locked ? '🔓 Unlock' : '🔒 Lock' }}
+                                </button>
+                            </form>
                         </div>
 
                     </div>
@@ -524,23 +483,13 @@
                     <div class="contents">
 
                         <div class="field">
-
-                            <div class="field-title">
-                                Title
-                            </div>
-
+                            <div class="field-title">Title</div>
                             {{ $currentData['title'] ?? '—' }}
-
                         </div>
 
                         <div class="field">
-
-                            <div class="field-title">
-                                Content
-                            </div>
-
+                            <div class="field-title">Content</div>
                             {{ $currentData['content'] ?? '—' }}
-
                         </div>
 
                     </div>
@@ -549,9 +498,7 @@
 
                         <div class="diff-box">
 
-                            <h4>
-                                Changed Fields
-                            </h4>
+                            <h4 style="margin-top: 0;">Changed Fields</h4>
 
                             @php
                                 $hasChanges = false;
@@ -560,9 +507,7 @@
                             @foreach($currentData as $field => $value)
 
                                 @php
-                                    $oldValue =
-                                        $previousData[$field]
-                                        ?? null;
+                                    $oldValue = $previousData[$field] ?? null;
                                 @endphp
 
                                 @if($oldValue != $value)
@@ -578,18 +523,12 @@
                                         </div>
 
                                         <div>
-                                            <span class="old">
-                                                Old:
-                                            </span>
-
+                                            <span class="old">Old:</span>
                                             {{ $oldValue ?? '—' }}
                                         </div>
 
                                         <div>
-                                            <span class="new">
-                                                New:
-                                            </span>
-
+                                            <span class="new">New:</span>
                                             {{ $value ?? '—' }}
                                         </div>
 
@@ -600,52 +539,49 @@
                             @endforeach
 
                             @if(!$hasChanges)
-
-                                <p>
-                                    No field changes detected.
-                                </p>
-
+                                <p style="margin: 0; color: #777;">No field changes detected.</p>
                             @endif
 
                         </div>
 
                     @endif
 
-                    <div class="version-actions">
-
-                        <!-- Restore -->
-
-                        <form
-                            method="POST"
-                            action="{{ route(
-                                'posts.revert',
-                                [$post->id, $version->id]
-                            ) }}"
-                        >
-
+                    <!-- Selective Field-Level Restore (Partial Rollback) Form -->
+                    <div class="selective-box">
+                        <form method="POST" action="{{ route('posts.revert-selective', [$post->id, $version->id]) }}" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                             @csrf
-
-                            <button
-                                type="submit"
-                                class="btn btn-danger"
-                                onclick="return confirm(
-                                    'Restore this version?'
-                                )"
-                            >
-                                ↩ Restore
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <strong style="font-size: 13px; color: #2980b9;">⏪ Selective Partial Restore:</strong>
+                                <label style="font-size: 13px; cursor: pointer;">
+                                    <input type="checkbox" name="fields[]" value="title" checked> Title
+                                </label>
+                                <label style="font-size: 13px; cursor: pointer;">
+                                    <input type="checkbox" name="fields[]" value="content" checked> Content
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-warning" onclick="return confirm('Restore selected field(s) from Version #{{ $version->id }}?')" style="font-size: 12px; padding: 5px 10px;">
+                                Partial Restore
                             </button>
+                        </form>
+                    </div>
 
+                    <div class="version-actions" style="margin-top: 15px;">
+
+                        <!-- Full Revert -->
+                        <form method="POST" action="{{ route('posts.revert', [$post->id, $version->id]) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Restore all attributes to Version #{{ $version->id }}?')">
+                                ↩ Full Revert
+                            </button>
                         </form>
 
-                        <!-- JSON -->
+                        <!-- Compare with Current -->
+                        <a href="{{ route('posts.versions.compare', [$post->id, 'v1' => $version->id, 'v2' => 'current']) }}" class="btn btn-warning">
+                            ⚡ Diff vs Live
+                        </a>
 
-                        <a
-                            href="{{ route(
-                                'posts.version.json',
-                                [$post->id, $version->id]
-                            ) }}"
-                            class="btn btn-info"
-                        >
+                        <!-- JSON Export -->
+                        <a href="{{ route('posts.version.json', [$post->id, $version->id]) }}" class="btn btn-info">
                             📄 JSON
                         </a>
 
@@ -660,15 +596,8 @@
     @else
 
         <div class="empty">
-
-            <h3>
-                No versions found.
-            </h3>
-
-            <p>
-                Try changing your filters.
-            </p>
-
+            <h3>No versions found.</h3>
+            <p>Try changing your filters.</p>
         </div>
 
     @endif
